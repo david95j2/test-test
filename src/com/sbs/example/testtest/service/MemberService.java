@@ -1,5 +1,7 @@
 package com.sbs.example.testtest.service;
 
+import java.util.List;
+
 import com.sbs.example.testtest.container.Container;
 import com.sbs.example.testtest.dao.MemberDao;
 import com.sbs.example.testtest.dto.Member;
@@ -10,20 +12,26 @@ public class MemberService {
 	public MemberService() {
 		memberDao=Container.memberDao;
 	}
-	
-	public int join(String loginId, String loginPw, String name) {
-		return memberDao.add(loginId,loginPw,name);
+
+	public void join(String loginId, String loginPw, String name) {
+		
+		memberDao.add(loginId,loginPw,name);
+		
 	}
 
-	public boolean isItTrue(String loginId) {
+	public boolean beDuplicate(String loginId) {
 		return memberDao.search(loginId);
 	}
 
-	public Member getMember(String loginId) {
-		return memberDao.getMember(loginId);
+	public Member isIdTrue(String loginId) {
+		return memberDao.isIdTrue(loginId);
 	}
 
-	public Member getMemberBySession(int id) {
-		return memberDao.getMemberBySession(id);
+	public Member getMember(int id) {
+		return memberDao.load(id);
+	}
+
+	public List<Member> getMembers() {
+		return memberDao.loadAllOfTheMember();
 	}
 }

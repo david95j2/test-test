@@ -6,59 +6,55 @@ import java.util.List;
 import com.sbs.example.testtest.dto.Member;
 
 public class MemberDao {
-	private int lastMemberId;
 	private List<Member> members;
-
+	private int lastMemberId;
 	public MemberDao() {
-		lastMemberId = 0;
+		lastMemberId=0;
 		members = new ArrayList<>();
 		
-		//테스트
-		addtestMember();
-		
-	}
-	private void addtestMember() {
-		add("user1", "user1", "캥거루");
-		add("user2", "user2", "코끼리");
-		add("user3", "user3", "개미");
+		//테스트회원 생성
+		getTestMember();
 	}
 
-	public int add(String loginId, String loginPw, String name) {
+	private void getTestMember() {
+		add("user1","user1","캥거루");
+		add("user2","user2","사자");
+		add("user3","user3","호랑이");
+	}
+
+	public void add(String loginId, String loginPw, String name) {
 		Member member = new Member();
-		member.loginId = loginId;
-		member.loginPw = loginPw;
-		member.name = name;
-		member.num = lastMemberId + 1;
+		member.loginId=loginId;
+		member.loginPw=loginPw;
+		member.name=name;
+		member.num=lastMemberId+1;
 		members.add(member);
-		lastMemberId = member.num;
-		return member.num;
+		lastMemberId=member.num;
 	}
 
 	public boolean search(String loginId) {
-		for (Member member : members) {
-			if (member.loginId.equals(loginId)) {
+		for(Member member : members) {
+			if(member.loginId.equals(loginId)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public Member getMember(String loginId) {
-		for (Member member : members) {
-			if (member.loginId.equals(loginId)) {
+	public Member isIdTrue(String loginId) {
+		for(Member member : members) {
+			if(member.loginId.equals(loginId)) {
 				return member;
 			}
 		}
 		return null;
 	}
 
-	public Member getMemberBySession(int id) {
-		for (Member member : members) {
-			if (member.num == id) {
-				return member;
-			}
-		}
-		return null;
+	public Member load(int id) {
+		return members.get(id);
 	}
 
+	public List<Member> loadAllOfTheMember() {
+		return members;
+	}
 }
