@@ -30,33 +30,20 @@ public class ArticleController extends Controller {
 			int boardId=Container.session.selectedBoardId;
 			int num = articleService.write(boardId,title, body, id);
 			System.out.printf("%d번 글이 등록되었습니다.\n", num);
-		} else if (cmd.equals("article list")) {
-			int boardId=Container.session.selectedBoardId-1;
+		} 
+		
+		else if (cmd.equals("article list")) {
+			int boardId=Container.session.selectedBoardId;
 			Board board = articleService.getBoardById(boardId);
-			if (board ==null) {
-				System.out.println("해당 게시판을 생성후 이용해주세요.");
-				return;
-			}
 			System.out.printf("==%s 글 목록 ==\n",board.boardName);
 			System.out.println("번호 / 작성자 / 제목");
-			articleService.articleOfBoard(boardId);
-			
-			List<Article> articles = articleService.getArticleOfB();
-			List<Member> members = Container.memberService.getMembers();
-			
-			int size = articleService.articleOfBoardSize();
-			if (size == 0) {
-				System.out.println("작성된 글이 없습니다.");
-				return;
+			List<Article> articles = articleService.articleOfBoard(boardId);
+			for(Article article : articles) {
+				Member member = Container.memberService.getMember(article.memberId);
+				System.out.printf("%d / %s / %s\n",article.id,member.name,article.title);
 			}
-			
-			for (int i = size - 1; i >= 0; i--) {
-				Article article = articles.get(i);
-				Member member = members.get(article.memberId);
-				System.out.printf("%d / %s / %s\n", article.id, member.name, article.title);
-			}
-
-		} else if (cmd.startsWith("article list ")) {
+		}
+		else if (cmd.startsWith("article list ")) {
 			int page = 1;
 			try {
 				page = Integer.parseInt(cmd.split(" ")[2]);
@@ -235,7 +222,7 @@ public class ArticleController extends Controller {
 		} else if (cmd.startsWith("article selectBoard ")) {
 			int index = 1;
 			try {
-				index = Integer.parseInt(cmd.split(" ")[2])-1;
+				index = Integer.parseInt(cmd.split(" ")[2]);
 			} catch (NumberFormatException e) {
 				System.out.println("입력 오류! 숫자로만 입력해주세요.");
 				return;
@@ -243,15 +230,13 @@ public class ArticleController extends Controller {
 				System.out.println("입력 오류! 다시한 번 입력해주세요.");
 				return;
 			}
-			int boardSize=Container.session.selectedBoardId-1;
-			if (index <= 0) {
-				index = 0;
-			}
-			if(index>boardSize) {
+			
+			Board board = articleService.getBoardById(index);
+			if(board==null) {
 				System.out.println("해당 게시판이 존재하지 않습니다.");
 				return;
 			}
-			Board board = articleService.getBoardById(index);
+			
 			System.out.printf("%s 게시판이 선택되었습니다.\n",board.boardName);
 			Container.session.selectedBoardId=board.boardId;
 		}

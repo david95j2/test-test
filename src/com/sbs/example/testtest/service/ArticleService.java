@@ -59,15 +59,7 @@ public class ArticleService {
 		return articleDao.getBoardById(index);
 	}
 
-	public void articleOfBoard(int boardId) {
-		articleDao.articleOfBoard(boardId);
-	}
-
-	public List<Article> getArticleOfB() {
-		return articleDao.getArticleOfB();
-	}
-
-	public int articleOfBoardSize() {
-		return articleDao.articleOfBoardSize();
+	public List<Article> articleOfBoard(int boardId) {
+		return articleDao.articleOfBoard(boardId);
 	}
 }

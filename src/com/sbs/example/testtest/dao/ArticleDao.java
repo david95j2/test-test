@@ -1,6 +1,7 @@
 package com.sbs.example.testtest.dao;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.sbs.example.testtest.dto.Article;
@@ -14,14 +15,13 @@ public class ArticleDao {
 	private List<Board> boards;
 	private int lastBoardId;
 
-	private List<Article> articleOfBoard;
+	
 
 	public ArticleDao() {
 		lastArticleId = 0;
 		articles = new ArrayList<>();
 		newArticles = new ArrayList<>();
 		boards = new ArrayList<>();
-		articleOfBoard = new ArrayList<>();
 
 		lastBoardId = 0;
 	}
@@ -87,23 +87,22 @@ public class ArticleDao {
 	}
 
 	public Board getBoardById(int index) {
-		return boards.get(index);
+		for(Board board : boards) {
+			if(board.boardId==index) {
+				return board;
+			}
+		}
+		return null;
 	}
 
-	public void articleOfBoard(int boardId) {
-		for (Article article : articles) {
-			if (article.boardId == boardId) {
+	public List<Article> articleOfBoard(int boardId) {
+		List<Article> articleOfBoard= new ArrayList<>();
+		for(Article article : articles) {
+			if(article.boardId==boardId) {
 				articleOfBoard.add(article);
 			}
 		}
-
-	}
-
-	public List<Article> getArticleOfB() {
+		Collections.reverse(articleOfBoard);
 		return articleOfBoard;
-	}
-
-	public int articleOfBoardSize() {
-		return articleOfBoard.size();
 	}
 }
