@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sbs.example.testtest.container.Container;
 import com.sbs.example.testtest.dto.Article;
+import com.sbs.example.testtest.dto.Board;
 import com.sbs.example.testtest.dto.Member;
 import com.sbs.example.testtest.service.ArticleService;
 
@@ -145,8 +146,7 @@ public class ArticleController extends Controller {
 			String body = Container.sc.nextLine();
 			int id = articleService.modifyArticle(title, body, inputedId);
 			System.out.printf("%d번 글이 수정되었습니다.\n", id);
-		}
-		else if (cmd.startsWith("article remove ")) {
+		} else if (cmd.startsWith("article remove ")) {
 			if (Container.session.logOut()) {
 				System.out.println("로그인 후 이용가능");
 				return;
@@ -179,24 +179,22 @@ public class ArticleController extends Controller {
 
 			System.out.println("== 글 삭제 ==");
 			articleService.remove(inputedId);
-			System.out.printf("%d번 글이 삭제되었습니다.\n", inputedId+1);
-		}
-		else if (cmd.startsWith("article search ")) {
+			System.out.printf("%d번 글이 삭제되었습니다.\n", inputedId + 1);
+		} else if (cmd.startsWith("article search ")) {
 			int page = 1;
-			String[] cmdBits=cmd.split(" ");
+			String[] cmdBits = cmd.split(" ");
 			try {
 				page = Integer.parseInt(cmdBits[3]);
 			} catch (NumberFormatException e) {
 				System.out.println("페이지번호를 숫자로만 입력해주세요.");
 				return;
-			} 
-			catch (ArrayIndexOutOfBoundsException e) {
-				page=1;
+			} catch (ArrayIndexOutOfBoundsException e) {
+				page = 1;
 			}
 			if (page <= 1) {
 				page = 1;
 			}
-			String value=cmdBits[2];
+			String value = cmdBits[2];
 			articleService.valueOfArticles(value);
 			int pageList = 10;
 			int startPage = articleService.newArticlesSize() - 1;
@@ -218,6 +216,34 @@ public class ArticleController extends Controller {
 				Member member = members.get(article.memberId);
 				System.out.printf("%d / %s / %s\n", article.id, member.name, article.title);
 			}
-		} 
+		} else if (cmd.equals("article makeBoard")) {
+			System.out.println("== 게시판 생성 ==");
+			System.out.printf("게시판 이름 : ");
+			String boardName = Container.sc.nextLine();
+			int index = articleService.makeBoard(boardName);
+			System.out.printf("%s(%d번) 게시판이 생성되었습니다.\n", boardName, index);
+		} else if (cmd.startsWith("article selectBoard ")) {
+			int index = 1;
+			try {
+				index = Integer.parseInt(cmd.split(" ")[2]) - 1;
+			} catch (NumberFormatException e) {
+				System.out.println("입력 오류! 숫자로만 입력해주세요.");
+				return;
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.out.println("입력 오류! 다시한 번 입력해주세요.");
+				return;
+			}
+			if (index <= 0) {
+				index = 0;
+			}
+			int num = Container.session.selectedBoardId;
+			if(index>num) {
+				System.out.println("해당 게시물이 존재하지 않습니다.");
+				return;
+			}
+			Board board = articleService.getBoardById(index);
+			System.out.printf("%s 게시판이 선택되었습니다.\n",board.boardName);
+			Container.session.selectedBoardId=board.boardId;
+		}
 	}
 }

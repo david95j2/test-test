@@ -4,15 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sbs.example.testtest.dto.Article;
+import com.sbs.example.testtest.dto.Board;
 
 public class ArticleDao {
 	private List<Article> articles;
 	private int lastArticleId;
 	private List<Article> newArticles;
+	
+	private List<Board> boards;
+	private int lastBoardId;
 	public ArticleDao() {
 		lastArticleId = 0;
 		articles = new ArrayList<>();
 		newArticles= new ArrayList<>();
+		boards=new ArrayList<>();
+		lastBoardId=0;
+		makeBoard("공지사항");
 		// 테스트
 		getTestArticles();
 	}
@@ -74,5 +81,18 @@ public class ArticleDao {
 
 	public List<Article> newGetArticles() {
 		return newArticles;
+	}
+
+	public int makeBoard(String name) {
+		Board board = new Board();
+		board.boardId=lastBoardId+1;
+		board.boardName=name;
+		boards.add(board);
+		lastBoardId=board.boardId;
+		return board.boardId;
+	}
+
+	public Board getBoardById(int index) {
+		return boards.get(index);
 	}
 }
