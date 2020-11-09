@@ -11,6 +11,24 @@ public class App {
 	public App() {
 		memberController=Container.memberController;
 		articleController=Container.articleController;
+		makeTestData();
+	}
+
+	private void makeTestData() {
+		Container.memberService.join("user1","user1","캥거루");
+		Container.memberService.join("user2","user2","사자");
+		Container.memberService.join("user3","user3","호랑이");	
+		
+		Container.articleService.makeBoard("공지사항");
+		Container.session.selectedBoardId=1;
+		
+		for (int i = 0; i <= 6; i++) {
+			Container.articleService.write(1, "공지사항" + (i + 1), "내용" + (i + 1), 0);
+		}
+		for (int i = 7; i <= 13; i++) {
+			Container.articleService.write(2, "자유" + (i + 1), "내용" + (i + 1), 1);
+		}
+		
 	}
 
 	public void run() {

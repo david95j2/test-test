@@ -27,20 +27,29 @@ public class ArticleController extends Controller {
 			System.out.printf("내용 : ");
 			String body = Container.sc.nextLine();
 			int id = Container.session.loginedMemberId - 1;
-			int num = articleService.write(title, body, id);
+			int boardId=Container.session.selectedBoardId;
+			int num = articleService.write(boardId,title, body, id);
 			System.out.printf("%d번 글이 등록되었습니다.\n", num);
 		} else if (cmd.equals("article list")) {
-
-			int size = articleService.articlesSize();
+			int boardId=Container.session.selectedBoardId-1;
+			Board board = articleService.getBoardById(boardId);
+			if (board ==null) {
+				System.out.println("해당 게시판을 생성후 이용해주세요.");
+				return;
+			}
+			System.out.printf("==%s 글 목록 ==\n",board.boardName);
+			System.out.println("번호 / 작성자 / 제목");
+			articleService.articleOfBoard(boardId);
+			
+			List<Article> articles = articleService.getArticleOfB();
+			List<Member> members = Container.memberService.getMembers();
+			
+			int size = articleService.articleOfBoardSize();
 			if (size == 0) {
 				System.out.println("작성된 글이 없습니다.");
 				return;
 			}
-			System.out.println("== 글 전체목록 ==");
-			System.out.println("번호 / 작성자 / 제목");
-
-			List<Article> articles = articleService.getArticles();
-			List<Member> members = Container.memberService.getMembers();
+			
 			for (int i = size - 1; i >= 0; i--) {
 				Article article = articles.get(i);
 				Member member = members.get(article.memberId);
@@ -222,10 +231,11 @@ public class ArticleController extends Controller {
 			String boardName = Container.sc.nextLine();
 			int index = articleService.makeBoard(boardName);
 			System.out.printf("%s(%d번) 게시판이 생성되었습니다.\n", boardName, index);
+			Container.session.selectedBoardId=index;
 		} else if (cmd.startsWith("article selectBoard ")) {
 			int index = 1;
 			try {
-				index = Integer.parseInt(cmd.split(" ")[2]) - 1;
+				index = Integer.parseInt(cmd.split(" ")[2])-1;
 			} catch (NumberFormatException e) {
 				System.out.println("입력 오류! 숫자로만 입력해주세요.");
 				return;
@@ -233,12 +243,12 @@ public class ArticleController extends Controller {
 				System.out.println("입력 오류! 다시한 번 입력해주세요.");
 				return;
 			}
+			int boardSize=Container.session.selectedBoardId-1;
 			if (index <= 0) {
 				index = 0;
 			}
-			int num = Container.session.selectedBoardId;
-			if(index>num) {
-				System.out.println("해당 게시물이 존재하지 않습니다.");
+			if(index>boardSize) {
+				System.out.println("해당 게시판이 존재하지 않습니다.");
 				return;
 			}
 			Board board = articleService.getBoardById(index);

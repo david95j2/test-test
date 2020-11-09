@@ -10,35 +10,29 @@ public class ArticleDao {
 	private List<Article> articles;
 	private int lastArticleId;
 	private List<Article> newArticles;
-	
+
 	private List<Board> boards;
 	private int lastBoardId;
+
+	private List<Article> articleOfBoard;
+
 	public ArticleDao() {
 		lastArticleId = 0;
 		articles = new ArrayList<>();
-		newArticles= new ArrayList<>();
-		boards=new ArrayList<>();
-		lastBoardId=0;
-		makeBoard("공지사항");
-		// 테스트
-		getTestArticles();
+		newArticles = new ArrayList<>();
+		boards = new ArrayList<>();
+		articleOfBoard = new ArrayList<>();
+
+		lastBoardId = 0;
 	}
 
-	private void getTestArticles() {
-		for (int i = 0; i <= 6; i++) {
-			write("제목" + (i + 1), "내용" + (i + 1), 0);
-		}
-		for (int i = 7; i <= 13; i++) {
-			write("제목" + (i + 1), "내용" + (i + 1), 1);
-		}
-	}
-
-	public int write(String title, String body, int id) {
+	public int write(int boardId, String title, String body, int id) {
 		Article article = new Article();
 		article.id = lastArticleId + 1;
 		article.title = title;
 		article.body = body;
 		article.memberId = id;
+		article.boardId = boardId;
 		articles.add(article);
 		lastArticleId = article.id;
 		return article.id;
@@ -58,8 +52,8 @@ public class ArticleDao {
 
 	public int modify(String title, String body, int id) {
 		Article article = articles.get(id);
-		article.title=title;
-		article.body=body;
+		article.title = title;
+		article.body = body;
 		return article.id;
 	}
 
@@ -68,8 +62,8 @@ public class ArticleDao {
 	}
 
 	public void valueOfArticles(String value) {
-		for(Article article : articles) {
-			if(article.title.contains(value)) {
+		for (Article article : articles) {
+			if (article.title.contains(value)) {
 				newArticles.add(article);
 			}
 		}
@@ -85,14 +79,31 @@ public class ArticleDao {
 
 	public int makeBoard(String name) {
 		Board board = new Board();
-		board.boardId=lastBoardId+1;
-		board.boardName=name;
+		board.boardId = lastBoardId + 1;
+		board.boardName = name;
 		boards.add(board);
-		lastBoardId=board.boardId;
+		lastBoardId = board.boardId;
 		return board.boardId;
 	}
 
 	public Board getBoardById(int index) {
 		return boards.get(index);
+	}
+
+	public void articleOfBoard(int boardId) {
+		for (Article article : articles) {
+			if (article.boardId == boardId) {
+				articleOfBoard.add(article);
+			}
+		}
+
+	}
+
+	public List<Article> getArticleOfB() {
+		return articleOfBoard;
+	}
+
+	public int articleOfBoardSize() {
+		return articleOfBoard.size();
 	}
 }

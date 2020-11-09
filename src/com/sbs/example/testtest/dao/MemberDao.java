@@ -12,14 +12,6 @@ public class MemberDao {
 		lastMemberId=0;
 		members = new ArrayList<>();
 		
-		//테스트회원 생성
-		getTestMember();
-	}
-
-	private void getTestMember() {
-		add("user1","user1","캥거루");
-		add("user2","user2","사자");
-		add("user3","user3","호랑이");
 	}
 
 	public void add(String loginId, String loginPw, String name) {

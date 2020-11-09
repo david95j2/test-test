@@ -14,8 +14,8 @@ public class ArticleService {
 		articleDao=Container.articleDao;
 	}
 
-	public int write(String title, String body, int id) {
-		return articleDao.write(title,body,id);
+	public int write(int boardId,String title, String body, int id) {
+		return articleDao.write(boardId,title,body,id);
 	}
 
 	public int articlesSize() {
@@ -57,5 +57,17 @@ public class ArticleService {
 
 	public Board getBoardById(int index) {
 		return articleDao.getBoardById(index);
+	}
+
+	public void articleOfBoard(int boardId) {
+		articleDao.articleOfBoard(boardId);
+	}
+
+	public List<Article> getArticleOfB() {
+		return articleDao.getArticleOfB();
+	}
+
+	public int articleOfBoardSize() {
+		return articleDao.articleOfBoardSize();
 	}
 }
